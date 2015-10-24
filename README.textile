@@ -3,8 +3,6 @@ h1. drcwebapp
 Code für das Seminar WebApps, Wintersemester 2015/2016 (siehe "Seminarplan":http://www.spinfo.phil-fak.uni-koeln.de/16754.html)
 
 
-h2. WebApps - crestomazia digitala
-
 table(#tableborders){ border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; width:100%;}.
 | | *Inhalt* | *Ressourcen* | *Literatur* |
 | "package1":https://github.com/spinfo/drcwebapp/tree/master/drcwebapp/src/de/uni_koeln/spinfo/ | Controller | Spring |  |
