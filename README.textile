@@ -1,0 +1,15 @@
+Code für das Seminar WebApps, Wintersemester 2015/2016 (siehe "Seminarplan":http://www.spinfo.phil-fak.uni-koeln.de/webApps.html )
+
+
+h2. WebApps - crestomazia digitala
+
+table(#tableborders){ border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; width:100%;}.
+| | *Inhalt* | *Ressourcen* | *Literatur* |
+| "ir1":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir1 | Korpus | "Shakespeare":http://www.gutenberg.org/cache/epub/100/pg100.txt | |
+| "ir2":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir2 | Lineare Suche, Term-Dokument-Matrix | | IIR Kap. 1 |
+| "ir3":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir3 | Invertierter Index, Listen-Intersection, Vorverarbeitung | | IIR Kap. 1 + 2 |
+| "ir4":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir4 | Positional Index, PositionalIntersect | | IIR Kap. 2.4 |
+| "ir5":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir5 | Ranked Retrieval: Termgewichtung, Vector Space Model | | IIR Kap. 6 + 7 |
+| "ir6":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir6 | Evaluation: Precision, Recall, F-Maß | | IIR Kap. 8 |
+| "ir7":https://github.com/claesn/ir2014/tree/master/IR-Praxis/src/de/uni_koeln/spinfo/ir/ir7 | Lucene: Indexer und Searcher | Benötigte jars siehe "Lucene.zip":http://lucene.apache.org/core/mirrors-core-latest-redir.html | "Lucene in Action":http://www.manning.com/hatcher3/ |
+
