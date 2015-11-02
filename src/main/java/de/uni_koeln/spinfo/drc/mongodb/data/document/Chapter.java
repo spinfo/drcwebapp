@@ -13,7 +13,6 @@ public class Chapter extends RangeDocument implements Serializable {
 	private static final long serialVersionUID = 966219871511162636L;
 
 	private String title;
-	
 	private String volumeId;
 	
 	@PersistenceConstructor

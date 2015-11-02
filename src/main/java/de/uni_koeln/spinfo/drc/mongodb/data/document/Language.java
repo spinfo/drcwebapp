@@ -13,7 +13,6 @@ public class Language extends RangeDocument implements Serializable {
 	private static final long serialVersionUID = -2899898943742978114L;
 
 	private String title;
-	
 	private String volumeId;
 	
 	@PersistenceConstructor

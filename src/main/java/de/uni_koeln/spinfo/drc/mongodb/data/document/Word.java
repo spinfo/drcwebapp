@@ -19,17 +19,11 @@ public class Word implements Serializable, Comparable<Word> {
 
 	@Id
 	private String id;
-
-	/**
-	 * THE INDEX
-	 */
 	private int index;
-	
 	private String pageId;
 	private String chapterId;
 	private String volumeId;
 	private String languageId;
-	
 	private List<Version> versions;
 	private List<PoS> posList;
 	private Rectangle rectangle;

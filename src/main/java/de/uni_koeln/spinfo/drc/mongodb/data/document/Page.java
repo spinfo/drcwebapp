@@ -15,10 +15,7 @@ public class Page extends RangeDocument implements Comparable<Page>, Serializabl
 	private static final long serialVersionUID = -8489134538582298484L;
 	
 	private String url;
-	
-	// NEW
 	private String printedPageNuber;
-	
 	private String volumeId;
 	private List<String> chapterIds = new ArrayList<>();
 	private List<String> languageIds = new ArrayList<>();
