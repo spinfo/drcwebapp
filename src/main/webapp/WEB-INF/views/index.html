@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Index</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+
+		<div class="row-fluid">
+			<div class="span12"></div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span12"></div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span12"></div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span12"></div>
+		</div>
+
+		<div class="row-fluid">
+		
+			<div class="span3 well lead">
+				<h4> Digital verfügbar: </h4>
+				<p><small><a th:href="@{/drc/volumes}">Rätoromanische Chrestomathie</a></small></p>
+				<h4> In Vorbereitung: </h4>
+				<p class="muted"><small>Gartner Theodor: Das Neue Testament (1560)</small></p>
+				<p class="muted"><small>Bibliografia retoromontscha</small></p>
+				<p class="muted"><small>Schorta, Andrea: Tschantamaints d’EngiadinaBassa.</small></p>
+				<p class="muted"><small>Peer, Oscar: Dicziunari rumantschladin-tudais-ch.</small></p>
+				<p class="muted"><small>Halter, Toni; Toja Isenring-Maissen: Praulas.</small></p>
+				<p class="muted"><small>Spescha, Arnold: Grammatica sursilvana.</small></p>
+			</div>
+
+			<div class="span8 lead text-left">
+				<p align="center">
+					<img src="../images/Biblioteca-Digitala-500px.jpg" />
+				</p>
+				<br />
+				<p>
+					Hier entsteht die <em>Biblioteca Digitala</em>, eine digitale
+					Bibliothek rätoromanischer Texte. Bereits digital verfügbar ist die
+					<a th:href="@{/drc/volumes}">Rätoromanische Chrestomathie</a> von Caspar
+					Decurtins (Erlangen 1888-1919, 13 Bände [als Faksimile mit Register
+					in 15 Bänden neu hgg. von Octopus-Verlag / Società Retorumantscha,
+					Chur 1982-1986]). Weitere Werke werden in Kürze zur Verfügung
+					gestellt. Nähere Informationen zum Vorhaben und den geplanten
+					Titeln finden Sie<a th:href="@{about}"> hier </a>.
+				</p>
+			</div>
+			<div class="span3 text-center"></div>
+		</div>
+	</div>
+</body>
+</html>
