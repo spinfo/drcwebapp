@@ -71,6 +71,10 @@
 	color: #15E9B1;
 }
 
+.text-area {
+	margin-top: 100px;
+}
+
 </style>
 </head>
 <body>
@@ -100,7 +104,7 @@
 		</div>
 		<div class="row-fluid">
 			<div class="span2"></div>
-			<div class="span8 lead text-justified">
+			<div class="span8 lead text-justified text-area">
 				<div style="float: left;" th:each="word : ${words}">
 					<div class="translatable" th:attr="data-lang-id=${word.languageId}">
 						<div class="translation arrow_box">
@@ -138,6 +142,34 @@
 				</div>
 			</div>
 			<div class="span2"></div>
+			
+			<!-- .modal -->
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">Übersetzung</h4>
+						</div>
+						<div class="modal-body">
+								
+							<!-- CONTENT GOES HERE -->	
+								
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Schließen</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+			
 		</div>
 	</div>
 	
@@ -147,24 +179,44 @@
 		           
         var locked = false;
         var lang;
+        var phrase; 
         
-        window.maalrCallback = function(response) {
-			var results = response.data;
-			var len = response.length;
-			console.log(result + ", " + len);
+        window.maalrCallback = function(result) {
+        	console.log(JSON.stringify(result));
+        	$('.modal-body').empty();
+        	$('.modal-title').text("Übersetzung für '" + phrase + "'");
+        	
+        	
+        	if(result.data.length == 0) {
+        		$('.modal-body').append("<p style='color:red;'>" + result.nothingFoundMessage + "</p>");
+        	}
+        	 
+        	for (var key in result.data) {
+                if (result.data.hasOwnProperty(key)) {
+                    var a = result.data[key].a;
+                    var b = result.data[key].b;
+                    $('.modal-body').append('<p>' + a + ' | ' + b + '</p>');
+                }
+            }
+        	$('#myModal').modal('toggle');
 		}
          
 		$('.translate').click(function() {
 
-			console.log('translate clicked...');
-			
 			var id = $(this).attr("data-id");
-			var phrase = $(this).attr("data-word");
-			
-			var locale = 'rm'; // de, sm, st, both
+			phrase = $(this).attr("data-word");
+			var context = 'rumantschgrischun';
+			var locale = 'rm';
 			var maalr_max = 10;
 			
-			var url = 'http://pledarigrond.ch/json?pageNr=1&pageSize=' + maalr_max + '&locale=' + locale + '&values[searchPhrase]=' + phrase; // + '?&callback=maalrCallback'
+			if(lang == "Sursilvan") {
+				locale = "st"
+			} else if(lang == "Surmiran") {
+				context = "surmiran";
+				locale = "sm"
+			}
+			
+			var url = 'http://pledarigrond.ch/' + context + '/json?pageNr=1&pageSize=' + maalr_max + '&locale=' + locale + '&values[searchPhrase]=' + phrase;
 			
 			console.log(url);
 			
@@ -205,15 +257,6 @@
 				$(this).find('.arrow-down').fadeIn(100);
 				$(this).find('.translation').css({'margin-left': '-'+margin + 'px'});
 				$(this).find('#word_lang').text('LANG: ' + lang);
-				
-				console.log($(this));
-				
-// 				$(this).find('.translate').click(function(event) {
-// 					event.preventDefault();
-// 		            event.stopPropagation();
-// 		            var searchPhrase =  $(this).attr('data-word');
-// 		            window.open('http://pledarigrond.ch/rumantschgrischun/#highlight=false&language=both&method=normal&searchPhrase=' + searchPhrase + '&suggestions=false', '_blank');
-// 				});
 				
 				$(this).find('.closeB').click(function(event) {
 					event.stopPropagation();
