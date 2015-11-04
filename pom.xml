@@ -161,7 +161,7 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
-					<contextXml>jetty-context.xml</contextXml>
+					<contextXml>src/main/resources/jetty-context.xml</contextXml>
 					<webAppConfig>
 						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
 							<resourcesAsCSV>${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
