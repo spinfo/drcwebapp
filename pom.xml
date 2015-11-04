@@ -5,7 +5,6 @@
 	<artifactId>drcWebApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -24,7 +23,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.6.2</version>
+			<version>2.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -155,9 +154,7 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
-
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -175,7 +172,7 @@
 					<systemProperties>
 						<systemProperty>
 							<name>jetty.port</name>
-							<value>9999</value>
+							<value>8080</value>
 						</systemProperty>
 					</systemProperties>
 					<stopPort>9991</stopPort>
@@ -204,11 +201,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-
 		</plugins>
-
 	</build>
-
-
 </project>
 
