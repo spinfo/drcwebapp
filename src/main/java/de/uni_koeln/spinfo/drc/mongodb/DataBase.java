@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
@@ -29,20 +30,23 @@ public class DataBase {
 	
 	private MongoTemplate mongoTemplate;
 	
-	private PageRepository pageRepository;
 	private ChapterRepository chapterRepository;
 	private LanguageRepository LanguageRepository;
 	private VolumeRepository volumeRepository;
+	
+	@Autowired
 	private WordRepository wordRepository;
+	@Autowired
+	private PageRepository pageRepository;
 
 	@Inject
 	public DataBase(MongoRepositoryFactory dbFactory, MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
-		this.pageRepository = dbFactory.getRepository(PageRepository.class);
+		//this.pageRepository = dbFactory.getRepository(PageRepository.class);
 		this.chapterRepository = dbFactory.getRepository(ChapterRepository.class);
 		this.LanguageRepository = dbFactory.getRepository(LanguageRepository.class);
 		this.volumeRepository = dbFactory.getRepository(VolumeRepository.class);
-		this.wordRepository = dbFactory.getRepository(WordRepository.class);
+		//this.wordRepository = dbFactory.getRepository(WordRepository.class);
 	}
 
 	public MongoTemplate getMongoTemplate() {

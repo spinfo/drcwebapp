@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import de.uni_koeln.spinfo.drc.mongodb.data.PoS;
@@ -19,15 +21,19 @@ public class Word implements Serializable, Comparable<Word> {
 
 	@Id
 	private String id;
+	
+	//@Indexed(unique=true, direction=IndexDirection.ASCENDING)
 	private int index;
+	private List<Version> versions;
+	private List<PoS> posList;
+	private Rectangle rectangle;
+	
 	private String pageId;
 	private String chapterId;
 	private String volumeId;
 	private String languageId;
-	private List<Version> versions;
-	private List<PoS> posList;
-	private Rectangle rectangle;
 	private List<String> taggerPosOptions;
+	
 	
 
 	@PersistenceConstructor
