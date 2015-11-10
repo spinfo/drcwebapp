@@ -2,11 +2,11 @@ package de.uni_koeln.spinfo.drc.mongodb.repository;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Word;
 
-public interface WordRepository extends CrudRepository<Word, String> {
+public interface WordRepository extends Repository<Word, String> {
 	
 	public List<Word> findByVolumeId(String volumeId);
 	
@@ -17,5 +17,11 @@ public interface WordRepository extends CrudRepository<Word, String> {
 	public List<Word> findByLanguageId(String languageId);
 	
 	public Word findByIndex(int index);
+	
+	public Word save(Word word);
+	
+	public List<Word> findByRange(int from, int to);
+	
+	public long count();
 
 }
