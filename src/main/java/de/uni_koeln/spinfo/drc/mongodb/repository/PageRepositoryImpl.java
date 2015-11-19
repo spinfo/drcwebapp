@@ -80,5 +80,12 @@ public class PageRepositoryImpl implements PageRepository {
 		return operations.findOne(new Query(Criteria.where("_id").is(pageId)),
 				String.class, "pages");
 	}
+	
+	@Override
+	public List<Page> findByRange(int from, int to) {
+		List<Page> wordRange = operations.find(new Query(Criteria.where("index").gte(from)
+				.andOperator(Criteria.where("index").lte(to))), Page.class);
+		return wordRange;
+	}
 
 }
