@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Page</title>
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="../bootstrap/js/jquery.knob.js"></script>
+
+<style type="text/css">
+@font-face {
+	font-family: 'oldNewspaperTypes'; /*a name to be used later*/
+	src: url('../bootstrap/fonts/OldNewspaperTypes.ttf'); /*URL to font*/
+}
+
+.bordered {
+	border: 1px solid black;
+	font-size: 30px;
+	font-family: 'oldNewspaperTypes';
+}
+
+.word_info {
+	font-size: 18px;
+}
+
+.arrow_box {
+	position: absolute;
+	background: #88b7d5;
+	border: 1px solid #707070;
+}
+
+.arrow_box:after, .arrow_box:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	/* 	border-top-color: #42d9ff; */
+	border-top-color: #EFEFEF;
+	border-width: 14px;
+	margin-left: -20px;
+}
+
+.arrow_box:before {
+	border-top-color: #707070;
+	border-width: 15px;
+	margin-left: -22px;
+}
+
+.translatable {
+	font-size: 25px;
+	line-height: 30px;
+	cursor: default;
+	color: #707070;
+}
+
+.translate {
+	position: absolute;
+	border: 1px solid #a2a2a2 !important;
+	right: 42px;
+	top: 65%;
+}
+
+.closeB {
+	top: 65%;
+	position: absolute;
+	right: 6px;
+}
+
+.translation {
+	/* 	background: #42d9ff;  */
+	background: #EFEFEF;
+	margin-top: -185px;
+	border: 1px solid #707070 !important;
+	height: 150px;
+	border-radius: 5px;
+	padding: 12px;
+	display: none;
+	font-size: 20px;
+	margin-left: -175px;
+	width: 325px;
+}
+
+.selected {
+	color: #15E9B1;
+}
+
+.text-area {
+	margin-top: 100px;
+}
+
+.cpoint {
+	text-decoration: none;
+}
+
+a.cpoint:hover, a.cpoint:focus {
+	color: #15E9B1;
+	text-decoration: none;
+}
+
+.token {
+	text-decoration: none;
+	color: #333;
+}
+
+a.token:hover, a.token:focus {
+	text-decoration: none;
+}
+
+.floating {
+	float: left;
+}
+
+.word_info {
+	font-size: 18px;
+}
+
+.arrow_box {
+	position: absolute;
+	background: #88b7d5;
+	border: 1px solid #707070;
+}
+
+.arrow_box:after, .arrow_box:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	/* 	border-top-color: #42d9ff; */
+	border-top-color: #EFEFEF;
+	border-width: 14px;
+	margin-left: -20px;
+}
+
+.arrow_box:before {
+	border-top-color: #707070;
+	border-width: 15px;
+	margin-left: -22px;
+}
+
+.translatable {
+	font-size: 25px;
+	line-height: 30px;
+	cursor: default;
+	color: #707070;
+}
+
+.translate {
+	position: absolute;
+	border: 1px solid #a2a2a2 !important;
+	right: 42px;
+	top: 65%;
+}
+
+.closeB {
+	top: 65%;
+	position: absolute;
+	right: 6px;
+}
+
+.translation {
+	/* 	background: #42d9ff;  */
+	background: #EFEFEF;
+	margin-top: -185px;
+	border: 1px solid #707070 !important;
+	height: 150px;
+	border-radius: 5px;
+	padding: 12px;
+	display: none;
+	font-size: 20px;
+	margin-left: -175px;
+	width: 325px;
+}
+
+.selected {
+	color: #15E9B1;
+}
+
+.text-area {
+	margin-top: 100px;
+}
+
+.cpoint {
+	text-decoration: none;
+}
+
+a.cpoint:hover, a.cpoint:focus {
+	color: #15E9B1;
+	text-decoration: none;
+}
+
+.token {
+	text-decoration: none;
+	color: #333;
+}
+
+a.token:hover, a.token:focus {
+	text-decoration: none;
+}
+
+#selectable .ui-selecting {
+	background: #ccc;
+}
+
+#selectable .ui-selected {
+	background: #87AFC7;
+}
+
+.floating {
+	float: left;
+}
+</style>
+</head>
+<body>
+	<div class="container-fluid">
+
+		<!-- HEADDER -->
+		<div class="row-fluid">
+			<div class="page-header text-center">
+				<h1>
+					<a style="color: black;" th:href="@{volumes}">Crestomazia
+						Retoromontscha <small>Caspar Decurtins</small>
+					</a>
+				</h1>
+			</div>
+		</div>
+		<!-- / HEADDER -->
+
+		<!-- BREADCRUMB -->
+		<div class="row-fluid">
+			<div class="span12 lead">
+				<a th:href="@{/}">Start</a> <span> > </span> <a th:href="@{volumes}">RC
+					Bände</a> <span> > </span> <a
+					th:href="@{chapters(volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
+					th:text="${volumeTitle}"></a> <span> > </span> <a
+					th:href="@{pages(chapterId=${chapterId}, chapterTitle=${chapterTitle}, volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
+					th:text="${chapterTitle}"></a> <span> > </span> <span
+					th:text="${page.url}" th:attr="data-pageid=${page.id}" id="pageId"></span>
+			</div>
+		</div>
+		<!-- / BREADCRUMB -->
+
+		<div class="row-fluid">
+			<div class="span12 lead">
+				<div>
+
+					<!-- NAV-TABS -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation"><a href="#upload"
+							aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>
+						<li role="presentation" class="active"><a href="#correct"
+							aria-controls="correct" role="tab" data-toggle="tab">Correct</a></li>
+						<li role="presentation"><a href="#annotate"
+							aria-controls="annotate" role="tab" data-toggle="tab">Annotate</a></li>
+						<li role="presentation"><a href="#search"
+							aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
+						<li role="presentation"><a href="#export"
+							aria-controls="export" role="tab" data-toggle="tab">Export</a></li>
+					</ul>
+					<!-- / NAV-TABS -->
+
+					<!-- TAB-PANES -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane" id="upload">Upload
+							some files...</div>
+						<div role="tabpanel" class="tab-pane active" id="correct">
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-md-2 text-center"
+										style="padding-top: 20px; height: 100px;">
+										<h6>
+											<span>Font-size in pixel</span>
+										</h6>
+										<!-- .font dial -->
+										<input type="text" class="dial" data-thickness=".1"
+											data-cursor="true" data-min="10" data-max="100" value="21"
+											data-fgcolor="#617C58" data-linecap="round" data-width="100" />
+										<!-- / .font dial -->
+									</div>
+									<div class="col-md-2" style="padding-top: 80px;">
+										<form class="text-center form-inline">
+											<div class="form-group checkbox">
+												<h6>
+													<label><input id="typeWriter" type="checkbox" /><span
+														style="margin-left: 10px; font-weight: 500;">Typewriter
+															mode</span></label>
+												</h6>
+											</div>
+										</form>
+									</div>
+									<div class="col-md-8" style="padding-top: 80px;">
+										<h5>Selection Details:</h5>
+										<span>Selected character: </span><samp id="select-result"></samp><br/>
+										<span>Pos in word: </span><samp id="select-result-pos-word"></samp><br/>
+										<span>Pos in text: </span><samp id="select-result-pos-text"></samp><br/>
+										<span>Token IDs: </span><samp id="select-result-word"></samp>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="span2"></div>
+									<div class="span8 lead text-justified text-area">
+
+										<div id="selectable"
+											style="float: left; list-style: none; width: 100%;">
+
+											<!-- 									<li style="float: left;" th:each="letter, stats : ${letters}"> -->
+											<!-- 										<div th:with="currentWord=${letter.wordIndex}"> -->
+											<!-- 											<span th:text="${letter.character}" th:attr="data-id=${letter.id}, data-index=${letter.index}, data-word-index=${letter.wordIndex}"></span> -->
+											<!-- 										</div> -->
+											<!-- 									</li> -->
+											<!-- 									<li style="float: left;" th:each="word, stats : ${words}"> -->
+											<!-- 										<a class="cpoint" href="" th:if="${stats.index == 0}"><span>&#9898;</span></a> -->
+											<!-- 										<a class="token" th:attr="data-id=${word.id}, data-word=${word.currentVersion.version}"> -->
+											<!-- 											<span class="word" th:text="${word.currentVersion.version}"></span> -->
+											<!-- 										</a> -->
+											<!-- 										<span>&nbsp;</span> -->
+											<!-- 										<a class="cpoint" href=""><span>&#9898;</span></a> -->
+											<!-- 										<span>&nbsp;</span> -->
+											<!-- 									</li> -->
+										</div>
+
+									</div>
+									<div class="span2"></div>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="annotate">Annotation
+							not implemented yet...</div>
+						<div role="tabpanel" class="tab-pane" id="search">Search ...</div>
+						<div role="tabpanel" class="tab-pane" id="export">Export in
+							what so ever ...</div>
+					</div>
+					<!-- / TAB-PANES -->
+				</div>
+			</div>
+
+
+			<!-- CORRECTION.modal -->
+			<div class="modal fade" id="cModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">Correct</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-inline">
+								<div class="form-group">
+									<label for="currentWord">Word</label> <input type="text"
+										class="form-control" id="currentWord" placeholder="..." />
+								</div>
+								<button type="submit" class="btn btn-primary">Save</button>
+							</form>
+							<hr />
+							<div class="img_container">
+								<img
+									src="http://thecatapi.com/api/images/get?format=src&amp;type=gif"
+									id="img-slice" class="img-responsive img-rounded"
+									alt="Responsive image" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- / CORRECTION.modal -->
+
+			<!-- .modal -->
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">Übersetzung</h4>
+						</div>
+						<div class="modal-body">
+
+							<!-- CONTENT GOES HERE -->
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Schließen</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+		//<![CDATA[
+		var fontSize = 21;
+		 $(".dial").knob({
+			 'stopper' : 100,
+             'release' : function(currentValue) {
+            	 fontSize = currentValue;
+            	 console.log("currentValue: " +fontSize);
+            	 $('.ui-selectee').css({"font-size": "" + fontSize + "px"});
+             }
+          });
+		           
+		$('#typeWriter:checkbox').on("click", function() {
+			var inner = $(this);
+			console.log(inner);
+			var selected = $(this).is(':checked');
+			console.log(selected);
+			if(selected) {
+				$('#select-result').css({"font-family":"oldNewspaperTypes"});
+				$('.ui-selectee').css({"border":"1px solid black", "font-size":"" + fontSize + "px","font-family":"oldNewspaperTypes"});
+			} else {
+				$('.ui-selectee').css({"border":"none", "font-size":"" + fontSize + "px","font-family":"Helvetica Neue,Helvetica,Arial,sans-serif"});
+				// $('.ui-selectee').removeClass('.bordered');
+				$('#select-result').css({"font-family":""});
+			}
+		});
+
+		var container = $('#selectable');
+		var letters = /*[[${letters}]]*/;
+		var id = letters[0].wordIndex;
+		
+// 		var mySet = new Set();
+// 		$.each(letters, function(i) {
+// 			var character = letters[i].character;
+// 			mySet.add(character.toLowerCase());
+// 		});
+// 		mySet.forEach(function(value) {
+// 			  console.log(value);
+// 		});
+		var map = new Object(); 
+		function toMap(key) {
+			var value = map[key];
+			if(value == null) {
+				map[key] = 0;
+			} else {
+				map[key] = value + 1;
+			}
+		}
+		
+		$.each(letters, function(i) {
+// 			if(i==100) {
+// 				return false;
+// 			}
+			var wordIndex = letters[i].wordIndex;
+			var character = letters[i].character;
+			var charPosInText = letters[i].charPosInText;
+			var charPosInWord = letters[i].charPosInWord;
+			
+			if(wordIndex == id) {
+				var a = $('<div/>').attr("data-word-index", wordIndex).attr("data-charpos-word", charPosInWord).attr("data-charpos-text", charPosInText).css("float", "left").text(character).appendTo(container);
+			} else {
+				var b = $('<div/>').addClass("splitter").css({"float" : "left", "padding-left" : "5px", "padding-right" : "5px"}).text("●").appendTo(container);
+				var c = $('<div/>').attr("data-word-index", wordIndex).attr("data-charpos-word", charPosInWord).attr("data-charpos-text", charPosInText).css({"float" : "left"}).text(character).appendTo(container);
+				id = wordIndex;
+			}
+		});
+		
+		var colors = new Array();
+		colors[1] = "#82CAFF";
+		colors[2] = "#FFB682";
+		colors[3] = "#FFB682";
+		colors[4] = "#1756E8";
+		colors[5] = "#C11B17";
+		colors[6] = "#17BFC2";
+		colors[7] = "#9E7BFF";
+		colors[8] = "#DCFF7A";
+		var c = new Array();
+		
+		$(function() {
+	    	$( "#selectable" ).selectable({
+// 	    		selected: function(event, ui) {
+// 	    			console.log(event);
+// 	    			console.log(ui.selected);
+// 	    			if($(ui.selected).hasClass("splitter")) {
+// 	    				return false;
+// 	    			}
+	    			
+// 	    			var wordIndex = $(ui.selected).attr("data-word-index");
+// 	    			var charPos = $(ui.selected).attr("data-charpos-text");
+// 	    			var text = $(ui.selected).text();
+// 	    			var ran = Math.floor((Math.random() * 8) + 1);
+// 	    			console.log("text: " + text);
+// 	    			console.log("wordIndex: " + wordIndex + ", charPos: " + charPos);
+// 	    			$('div.ui-selectee:contains(' + text + ')').css('background-color', colors[ran]);
+// 	    		}, 
+				stop: function() {
+					var result = $( "#select-result" ).empty();
+					var posText = $( "#select-result-pos-text" ).empty();
+					var posWord = $( "#select-result-pos-word" ).empty();
+					var wordIds = $( "#select-result-word" ).empty();
+					
+					var charPosTexts = new Array();
+					var charPosWords = new Array();
+					var ids = new Array();
+					
+					$( ".ui-selected", this ).each(function() {
+						var text = $(this).text();
+						var wordId = $(this).attr("data-word-index");
+						var charPosInWord = $(this).attr("data-charpos-word");
+						var charPosInText = $(this).attr("data-charpos-text");
+						
+						if(!$(this).hasClass("splitter")) {
+							charPosWords.push(charPosInWord);
+							charPosTexts.push(charPosInText);
+							
+							var contains = $.inArray(wordId, ids);
+							if(contains === -1) {
+								ids.push(wordId);
+							}
+							
+						}
+						result.append(text);
+					});
+					var jIds = ids.join(' ');
+					var jCharPosWords = charPosWords.join(' ');
+					var jCharPosTexts = charPosTexts.join(' ');
+					wordIds.append(jIds);
+					posText.append(jCharPosTexts);
+					posWord.append(jCharPosWords);
+				}
+			});
+		});
+		
+		$('.token').click(function() {
+			var tokenValue = $(this).attr("data-word");
+			console.log(tokenValue);
+			$('input:text#currentWord').val(tokenValue);
+			$('#cModal').modal('toggle');
+		});
+		
+		$('.cpoint').click(function() {
+			$('#cModal').modal('toggle');
+		});
+		
+		var locked = false;
+		var lang;
+		var phrase;
+		
+		window.maalrCallback = function(result) {
+			console.log(JSON.stringify(result));
+			$('.modal-body').empty();
+			$('.modal-title').text("Übersetzung für '" + phrase + "'");
+			if (result.data.length == 0) {
+				$('.modal-body').append(
+						"<p style='color:red;'>" + result.nothingFoundMessage
+								+ "</p>");
+			}
+			for ( var key in result.data) {
+				if (result.data.hasOwnProperty(key)) {
+					var a = result.data[key].a;
+					var b = result.data[key].b;
+					$('.modal-body').append('<p>' + a + ' | ' + b + '</p>');
+				}
+			}
+			$('#myModal').modal('toggle');
+		}
+
+		$('.translate').click(
+				function() {
+
+					var id = $(this).attr("data-id");
+					phrase = $(this).attr("data-word");
+					var context = 'rumantschgrischun';
+					var locale = 'rm';
+					var maalr_max = 10;
+
+					if (lang == "Sursilvan") {
+						locale = "st"
+					} else if (lang == "Surmiran") {
+						context = "surmiran";
+						locale = "sm"
+					}
+
+					var url = 'http://pledarigrond.ch/' + context
+							+ '/json?pageNr=1&pageSize=' + maalr_max
+							+ '&locale=' + locale + '&values[searchPhrase]='
+							+ phrase;
+
+					console.log(url);
+
+					$.ajax({
+						type : 'GET',
+						url : url,
+						dataType : 'jsonp',
+						async : false,
+						cache : false,
+						crossDomain : true,
+						jsonpCallback : 'maalrCallback'
+					});
+				});
+
+		$('.translatable').click(function() {
+			if (!locked) {
+
+				locked = true;
+				var lang_id = $(this).attr("data-lang-id");
+				var url = "/drc/language?languageId=" + lang_id;
+
+				$.ajax({
+					type : 'GET',
+					url : url,
+					success : function(response) {
+						lang = response;
+					}
+				});
+
+				$(this).find('.word').addClass("selected");
+				var wordWidth = $(this).find('.word').width() / 2;
+				var margin = 175 - wordWidth;
+
+				$(this).find('.translation').fadeIn(100);
+				$(this).find('.translate').fadeIn(100);
+				$(this).find('.arrow-down').fadeIn(100);
+				$(this).find('.translation').css({
+					'margin-left' : '-' + margin + 'px'
+				});
+				$(this).find('#word_lang').text('LANG: ' + lang);
+
+				$(this).find('.closeB').click(function(event) {
+					event.stopPropagation();
+					locked = false;
+					var parent = $(this).parent().parent();
+					console.log(parent);
+					$(parent).find(".translation").hide(100);
+					$(parent).find(".translate").hide(100);
+					$(parent).find(".arrow-down").hide(100);
+					$(parent).find('.word').removeClass("selected");
+				});
+			}
+
+		});
+
+		$('.translatable').hover(function() {
+			$(this).find('.word').css({
+				'color' : '#15E9B1'
+			});
+		}, function() {
+			$(this).find('.word').css({
+				'color' : '#707070'
+			});
+			$(this).find('.selected').css({
+				'color' : '#15E9B1'
+			});
+
+		});
+
+		//]]>
+	</script>
+
+</body>
+</html>

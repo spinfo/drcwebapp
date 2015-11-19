@@ -1,11 +1,9 @@
 package de.uni_koeln.spinfo.drc.lucene;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -16,15 +14,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.highlight.Highlighter;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
-import org.apache.lucene.search.highlight.NullFragmenter;
-import org.apache.lucene.search.highlight.QueryScorer;
-import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
-import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,92 +24,50 @@ import org.springframework.stereotype.Service;
 public class Searcher {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
-	private final StandardAnalyzer analyzer = new StandardAnalyzer();
 
-	private final SimpleHTMLFormatter highlightFormatter = new SimpleHTMLFormatter("<strong class=\"text-info\">", "</strong>");
+	private final StandardAnalyzer analyzer = new StandardAnalyzer();
 
 	private int totalHits;
 
-	@Test
-	public void testSearch() throws URISyntaxException {
+	private static final int NBEST = 100;
 
-		String indexDir = "index";
-		String q = "daniel";
-		int offset = 0;
+	public List<SearchResult> basicSearch(String indexDir, String q) throws IOException, ParseException {
 
-		try {
-			search(indexDir, q, offset);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (InvalidTokenOffsetsException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Map<String, String> search(String indexDir, String q, int offset)
-			throws IOException, ParseException, InvalidTokenOffsetsException, URISyntaxException {
-
-		Directory dir = new SimpleFSDirectory(Paths.get(new URI(indexDir)));
+		Directory dir = new SimpleFSDirectory(new File(indexDir).toPath());
 		DirectoryReader dirReader = DirectoryReader.open(dir);
 		IndexSearcher is = new IndexSearcher(dirReader);
 
 		QueryParser parser = new QueryParser("contents", analyzer);
 		Query query = parser.parse(q);
+		logger.info("QUERY: " + query);
 
-		TopDocs hits = is.search(query, 5000);
-
+		List<SearchResult> resultList = new ArrayList<SearchResult>();
+		TopDocs hits = is.search(query, NBEST);
 		this.setTotalHits(hits.totalHits);
-		logger.info("QUERY: " + query + " - OFFSET: " + offset + " - HITS: "
-				+ hits.totalHits);
+		
+		for (int i = 0; i < hits.scoreDocs.length; i++) {
+			ScoreDoc scoreDoc = hits.scoreDocs[i];
 
-		Map<String, String> resultMap = new HashMap<String, String>();
-		int count = Math.min(hits.scoreDocs.length - offset, 10);
-		for (int i = 0; i < count; i++) {
-			ScoreDoc scoreDoc = hits.scoreDocs[offset + i];
 			Document doc = is.doc(scoreDoc.doc);
-			String filename = doc.get("filename");
+			String filename = doc.get("url");
+			String pageId = doc.get("pageId");
 			String content = doc.get("contents");
-			String highlighted = highlight(q, content);
-			resultMap.put(filename, highlighted);
+			String language = doc.get("languages");
+			String chapter = doc.get("chapters");
+			String volume = doc.get("volume");
+			
+			SearchResult result = new SearchResult();
+			result.setFilename(filename);
+			result.setContent(content);
+			result.setPageId(pageId);
+			result.setLanguage(language);
+			result.setChapter(chapter);
+			result.setVolume(volume);
+
+			resultList.add(result);
 		}
 		dirReader.close();
-		return resultMap;
-	}
-
-	public String highlight(String searchPhrase, String text)
-			throws IOException, InvalidTokenOffsetsException, ParseException {
-
-		QueryParser parser = new QueryParser("contents", analyzer);
-		Query query = parser.parse(searchPhrase);
-		QueryScorer scorer = new QueryScorer(query);
-		Highlighter highlighter = new Highlighter(highlightFormatter, scorer);
-
-		highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 40));
-		
-		StringBuilder highlight = new StringBuilder("... ");
-		String[] best = highlighter.getBestFragments(analyzer, "contents",
-				text, 10);
-		for (int j = 0; j < best.length; j++) {
-			highlight.append(best[j]);
-			highlight.append((j > best.length) ? "</br>...</br>" : " ...");
-		}
-		return highlight.toString();
-	}
-
-	public String highlightFullPage(String searchPhrase, String text)
-			throws IOException, InvalidTokenOffsetsException, ParseException {
-
-		QueryParser parser = new QueryParser("contents", analyzer);
-		Query query = parser.parse(searchPhrase);
-		QueryScorer scorer = new QueryScorer(query);
-
-		Highlighter highlighter = new Highlighter(highlightFormatter, scorer);
-		highlighter.setTextFragmenter(new NullFragmenter());
-		String best = highlighter.getBestFragment(analyzer, "contents", text);
-		return best;
+		return resultList;
 	}
 
 	public int getTotalHits() {
@@ -128,4 +77,31 @@ public class Searcher {
 	public void setTotalHits(int totalHits) {
 		this.totalHits = totalHits;
 	}
+
+	public List<SearchResult> search(String indexDir, String q) throws IOException, ParseException {
+
+		Directory dir = new SimpleFSDirectory(new File(indexDir).toPath());
+		DirectoryReader dirReader = DirectoryReader.open(dir);
+		IndexSearcher is = new IndexSearcher(dirReader);
+
+		QueryParser parser = new QueryParser("contents", analyzer);
+		Query query = parser.parse(q);
+		logger.info("QUERY: " + query);
+
+		List<SearchResult> resultList = new ArrayList<SearchResult>();
+		TopDocs hits = is.search(query, NBEST);
+		this.setTotalHits(hits.totalHits);
+
+		for (int i = 0; i < hits.scoreDocs.length; i++) {
+			ScoreDoc scoreDoc = hits.scoreDocs[i];
+			Document doc = is.doc(scoreDoc.doc);
+
+			SearchResult result = new SearchResult(doc.get("url"), doc.get("pageId"), doc.get("contents"),
+					doc.get("languages"), doc.get("chapters"), doc.get("volume"));
+			resultList.add(result);
+		}
+		dirReader.close();
+		return resultList;
+	}
+
 }

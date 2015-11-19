@@ -56,8 +56,8 @@ public class PageController {
 			@RequestParam("volumeId") String volumeId,
 			@RequestParam("volumeTitle") String volumeTitle) {
 		
-		List<Word> words = db.getWordRepository().findByPageId(pageId);
-		Page page = db.getPageRepository().findOne(pageId);
+		Page page = db.getPageRepository().findByPageId(pageId);
+		List<Word> words = db.getWordRepository().findByRange(page.getStart(), page.getEnd());
 		
 		Collections.sort(words);
 

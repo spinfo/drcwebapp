@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Index</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+
+		<div class="row-fluid">
+
+			<div class="span3 well lead">
+				<h4>Kategorien:</h4>
+				<p>
+					<small><a th:href="@{mypage2}">Cats</a></small>
+				</p>
+				<p>
+					<small><a th:href="@{/mypage}">Kitlers</a></small>
+				</p>
+				<p>
+					<small><a th:href="@{/}">digibib</a></small>
+				</p>
+				...
+			</div>
+
+			<div class="span8 lead text-left">
+				<p align="center">
+					<img src="../images/kitler2507.jpg" />
+				</p>
+				<p>
+					Hier entsteht eine digitale Bibliothek für Katzenbilder ...
+					<br/>Weitere Bilder finden Sie<a th:href="@{mypage2}">
+						hier </a>
+						
+				</p>
+			</div>
+			<div class="span3 text-center"></div>
+		</div>
+	</div>
+</body>
+</html>
