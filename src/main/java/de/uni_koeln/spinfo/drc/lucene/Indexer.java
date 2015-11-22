@@ -2,7 +2,6 @@ package de.uni_koeln.spinfo.drc.lucene;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +25,6 @@ import de.uni_koeln.spinfo.drc.mongodb.DataBase;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Page;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Volume;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Word;
-import de.uni_koeln.spinfo.drc.mongodb.repository.PageRepository;
 import de.uni_koeln.spinfo.drc.util.PropertyReader;
 
 @Service
@@ -42,126 +40,161 @@ public class Indexer {
 
 	private IndexWriter writer;
 
-	private static final int INDEXSIZE = 100;
+	/**
+	 * Creates a new index if there is none on startup (PostConstruct = called
+	 * after all services are initialized).
+	 * 
+	 * @throws IOException
+	 */
+	@PostConstruct
+	public void initialIndex() throws IOException {
+		init();
+		int numdocs = (this.writer.numDocs() == 0 ? index() : this.writer.numDocs());
+		logger.info("Index size: " + numdocs);
+		this.writer.close();
+	}
 
-	// public Indexer() {
-	// }
-
-	@PostConstruct // wird aufgerufen, sobald alle Services bereit sind
+	/**
+	 * Init an indexWriter for the directory specified in properties file.
+	 * 
+	 * @throws IOException
+	 */
 	public void init() throws IOException {
 		String indexDir = propertyReader.getIndexDir();
 		Directory dir = new SimpleFSDirectory(new File(indexDir).toPath());
 		IndexWriterConfig writerConfig = new IndexWriterConfig(new StandardAnalyzer());
 		this.writer = new IndexWriter(dir, writerConfig);
-		// Wenn noch kein Index vorliegt, erstellen:
-		if (this.writer.numDocs() == 0) {
-			logger.info("Indexing collection...");
-			int indexSize = index(INDEXSIZE);
-			logger.info("Index size: " + indexSize);
-			this.writer.close();
-		}
 	}
 
-	/*
-	 * Build index over db, restricted to a predefined size.
+	/**
+	 * Build index over db, optionally restricted to a predefined size (for test
+	 * purposes).
+	 * 
+	 * @param size
+	 * @return Total number of indexed documents.
 	 */
-	public int index(int size) {
+	public int index() {
 
 		long start = System.currentTimeMillis();
-
+		logger.info("Indexing collection...");
+		logger.info("MAXSIZE: " + propertyReader.getMaxIndexSize());
 		logger.info("Docs to index: " + db.getMongoTemplate().count(new Query(), Page.class));
 
 		Iterable<Volume> volumes = db.getVolumeRepository().findAll();
 		int pageCount = 0;
-		boolean escape = false;
+		boolean breakInnerLoop = false;
 		for (Volume volume : volumes) {
 			List<Page> pages = db.getPageRepository().findByVolumeId(volume.getId());
 			for (Page p : pages) {
-
-				// Iterable<Page> allPages = pageRepository.findAll();
-				// logger.info("All pages retrieved from db repo.");
-				// List<Page> allPages = new ArrayList<Page>();
-				// allPages.add(pageRepository.findByUrl("PPN345572629_0014_02-0007.xml"));
-				// allPages.add(pageRepository.findByUrl("PPN345572629_0014_02-0008.xml"));
-				// allPages.add(pageRepository.findByUrl("PPN345572629_0014_02-0009.xml"));
-				// allPages.add(pageRepository.findByUrl("PPN345572629_0014_02-0010.xml"));
-
 				pageCount++;
-				if (pageCount <= size) {
+				if (pageCount <= propertyReader.getMaxIndexSize()) {
 					logger.info(pageCount + ": " + p.toString());
 					indexPage(p);
-				}else{
-					escape = true;
+				} else {
+					breakInnerLoop = true;
 					break;
 				}
-				
 			}
-			if(escape)
+			if (breakInnerLoop)
 				break;
-			
 		}
-		logger.info("Indexing took " + (System.currentTimeMillis() - start) + " ms for " + this.writer.numDocs()
-				+ " pages.");
+		logger.info("Indexing took " + (System.currentTimeMillis() - start) + " ms.");
 		return this.writer.numDocs();
 	}
 
-	private void indexPage(Page p) {
-		Document doc = pageToLuceneDoc(p);
-		try {
-			if (doc != null) {
-				logger.info("Adding doc: " + p.toString());
+	/**
+	 * Convert page and add to index.
+	 * 
+	 * @param page
+	 */
+	private void indexPage(Page page) {
+		Document doc = pageToLuceneDoc(page);
+		if (doc != null) {
+			logger.info("Adding doc: " + page.toString());
+			try {
 				this.writer.addDocument(doc);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * Convert page info in Lucene Document.
+	/**
+	 * Convert page into Lucene Document.
+	 * 
+	 * @param page
+	 * @return Lucene Document to be indexed.
 	 */
-	private Document pageToLuceneDoc(Page p) {
+	private Document pageToLuceneDoc(Page page) {
 		Document doc = new Document();
-		doc.add(new StringField("url", p.getUrl(), Store.YES));
-		String pageId = p.getId();
-		doc.add(new StringField("pageId", pageId, Store.YES));
-		doc.add(new TextField("contents", pageContent(p), Store.YES));
-		doc.add(new TextField("languages", languages(p), Store.YES));
-		doc.add(new TextField("chapters", chapters(p), Store.YES));
-		String volume = db.getVolumeRepository().findOne(p.getVolumeId()).getTitle();
+		doc.add(new StringField("url", page.getUrl(), Store.YES));
+		doc.add(new StringField("pageId", page.getId(), Store.YES));
+		doc.add(new TextField("contents", pageContent(page), Store.YES));
+		doc.add(new TextField("languages", languages(page), Store.YES));
+		doc.add(new TextField("chapterId", chapterIds(page), Store.YES));
+		doc.add(new TextField("chapters", chapters(page), Store.YES));
+		doc.add(new StringField("volumeId", page.getVolumeId(), Store.YES));
+		String volume = db.getVolumeRepository().findOne(page.getVolumeId()).getTitle();
 		doc.add(new TextField("volume", volume, Store.YES));
-		String ppn = p.getPrintedPageNuber();
+		String ppn = page.getPrintedPageNuber();
 		if (ppn != null)
 			doc.add(new StringField("pageNumber", ppn, Store.YES));
 		return doc;
 	}
 
-	/*
-	 * Retrieve chapter name(s) a page belongs to.
+	/**
+	 * Retrieve chapter Id(s) a page belongs to. May contain two ids, for in
+	 * some cases chapters start in the middle of a page.
+	 * 
+	 * @param page
+	 * @return (blank separated) chapter id(s)
 	 */
-	private String chapters(Page p) {
+	private String chapterIds(Page page) {
 		StringBuilder sb = new StringBuilder();
-		List<String> chapterIds = p.getChapterIds();
+		List<String> chapterIds = page.getChapterIds();
 		for (String id : chapterIds) {
-			sb.append(db.getChapterRepository().findOne(id) + " ");
+			sb.append(id + " ");
 		}
 		return sb.toString().trim();
 	}
 
-	/*
-	 * Retrieve page language(s) from LanguageRepository.
+	/**
+	 * Retrieve chapter name(s) a page belongs to. May contain two chapter
+	 * titles, for in some cases chapters start in the middle of a page.
+	 * 
+	 * @param page
+	 * @return (blank separated) chapter title(s)
 	 */
-	private String languages(Page p) {
+	private String chapters(Page page) {
 		StringBuilder sb = new StringBuilder();
-		List<String> languageIds = p.getLanguageIds();
-		for (String id : languageIds) {
-			sb.append(db.getLanguageRepository().findOne(id) + " ");
+		List<String> chapterIds = page.getChapterIds();
+		for (String id : chapterIds) {
+			sb.append(db.getChapterRepository().findOne(id).getTitle() + " ");
 		}
 		return sb.toString().trim();
 	}
 
-	/*
+	/**
+	 * Retrieve page language(s) from LanguageRepository. May contain multiple
+	 * language tags.
+	 * 
+	 * @param page
+	 * @return (blank separated) language tag(s)
+	 */
+	private String languages(Page page) {
+		StringBuilder sb = new StringBuilder();
+		List<String> languageIds = page.getLanguageIds();
+		for (String id : languageIds) {
+			sb.append(db.getLanguageRepository().findOne(id).getTitle() + " ");
+		}
+		return sb.toString().trim();
+	}
+
+	/**
 	 * Retrieve page contents from WordRepository.
+	 * 
+	 * @param page
+	 * @return page contents
 	 */
 	private String pageContent(Page page) {
 		long start = System.currentTimeMillis();
@@ -174,23 +207,22 @@ public class Indexer {
 		return sb.toString().trim();
 	}
 
-	/*
-	 * Der Index steht erst dann für die Suche zur Verfügung, wenn der Writer
-	 * geschlossen wurde!
+	/**
+	 * Index has to be closed before searching (or other operations on index).
 	 */
 	public void close() throws IOException {
 		this.writer.close();
 	}
 
-	/*
-	 * Hilfsmethode für Re-Indexierung u.ä.
+	/**
+	 * @return the number of indexed documents.
 	 */
 	public int getNumDocs() {
 		return writer.numDocs();
 	}
 
-	/*
-	 * Hilfsmethode für Re-Indexierung u.ä.
+	/**
+	 * Delete existing index.
 	 */
 	public void deleteIndex() {
 		try {
@@ -200,14 +232,11 @@ public class Indexer {
 		}
 	}
 
-	/*
-	 * Gibt für collName eine Liste von JSON-Objekten als Strings zurück.
-	 * [chapters, languages, page, pages, system.indexes, tokens, volumes, word,
-	 * words, workingUnits]
+	/**
+	 * @return true, if the writer is open.
 	 */
-	public List<String> getJSON(String collName) {
-		//return db.getMongoTemplate().find(new Query(), String.class, collName);
-		return db.find(collName);
+	public boolean isAvailable() {
+		return writer.isOpen();
 	}
 
 }

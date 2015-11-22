@@ -1,54 +1,19 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<title>Search</title>
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	type="text/css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-
-<style type="text/css">
-.input-xl {
-	width: 300px
-}
-
-form {
-	display: table;
-	margin: 0 auto;
-}
-
-.vertical-adjust {
-	min-height: 50%; /* Fallback for browsers do NOT support vh unit */
-	min-height: 50vh;
-	display: flex;
-	align-items: center;
-}
-</style>
-
 </head>
+
+<!-- TODO searchResult im gleichen tab: 
+	action=searchResult ersetzen durch ??? -->
+
 <body>
-	<div class="container-fluid">
-
-		<div class="row-fluid">
-			<div class="page-header text-center">
-				<h1>
-					<a style="color: black;" th:href="@{drc/volumes}">Rätoromanische
-						Chrestomathie <small>Caspar Decurtins</small>
-					</a>
-				</h1>
-			</div>
-		</div>
-
-		<div class="row-fluid vertical-adjust">
-			<form class="form-search" action="/searchResult">
+	<div th:fragment="searchForm">
+		<div class="row col-lg-4 col-lg-offset-4 vertical-adjust">
+			<form class="form-search" action="/drc/searchResult">
 				<input type="text" class="input-xl search-query"
 					placeholder="Suche..." name="search" th:value="*{searchPhrase}"
 					autofocus="autofocus" autocomplete="on" />
 			</form>
-
-			<!-- TODO Zusätzliche suchoptionen (Radiobutton, dropdown, etc.) -->
-
 		</div>
 	</div>
 </body>

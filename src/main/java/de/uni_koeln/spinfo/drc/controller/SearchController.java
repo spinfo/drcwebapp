@@ -14,36 +14,37 @@ import org.springframework.web.servlet.ModelAndView;
 
 import de.uni_koeln.spinfo.drc.lucene.SearchResult;
 import de.uni_koeln.spinfo.drc.lucene.Searcher;
-import de.uni_koeln.spinfo.drc.util.PropertyReader;
 
+/**
+ * @author spinfo
+ *
+ */
 @Controller()
+@RequestMapping(value = "/drc")
 public class SearchController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	PropertyReader propertyReader;
-
-	@Autowired
 	private Searcher searcher;
 
-	/*
-	 * A simple search page hosting a search window.
+	/**
+	 * The search page
 	 */
 	@RequestMapping(value = "/search")
 	public ModelAndView search() {
 		return new ModelAndView("search");
 	}
 
-	/*
-	 * A simple result view.
+	/**
+	 * The result view
 	 */
 	@RequestMapping(value = "/searchResult")
 	public ModelAndView simpleResult(@RequestParam("search") String searchPhrase) {
 		logger.info("search=" + searchPhrase);
 		List<SearchResult> resultList = null;
 		try {
-			resultList = searcher.basicSearch(propertyReader.getIndexDir(), searchPhrase);
+			resultList = searcher.search(searchPhrase);
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
@@ -51,7 +52,7 @@ public class SearchController {
 		mv.addObject("searchPhrase", searchPhrase);
 		mv.addObject("hits", resultList);
 		mv.addObject("totalHits", searcher.getTotalHits());
-		// für pagination:
+		// pagination:
 		mv.addObject("offset", 0);
 		mv.addObject("resultPage", 1);
 		return mv;

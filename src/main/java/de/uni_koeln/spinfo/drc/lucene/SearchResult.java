@@ -1,5 +1,11 @@
 package de.uni_koeln.spinfo.drc.lucene;
 
+/**
+ * Container to wrap up page infos to be displayed in a result view.
+ * 
+ * @author spinfo
+ *
+ */
 public class SearchResult {
 
 	private String filename;
@@ -8,17 +14,33 @@ public class SearchResult {
 	private String language;
 	private String chapter;
 	private String volume;
+	private String chapterId;
+	private String volumeId;
 
 	public SearchResult() {
 	}
-	
-	public SearchResult(String filename, String pageId, String content, String language, String chapter,
-			String volume) {
+
+	/**
+	 * Full constructor.
+	 * 
+	 * @param filename
+	 * @param pageId
+	 * @param content
+	 * @param language
+	 * @param chapterId
+	 * @param chapter
+	 * @param volumeId
+	 * @param volume
+	 */
+	public SearchResult(String filename, String pageId, String content, String language, String chapterId,
+			String chapter, String volumeId, String volume) {
 		this.filename = filename;
 		this.pageId = pageId;
 		this.content = content;
 		this.language = language;
+		this.chapterId = chapterId;
 		this.chapter = chapter;
+		this.volumeId = volumeId;
 		this.volume = volume;
 	}
 
@@ -43,7 +65,7 @@ public class SearchResult {
 	public String getPageId() {
 		return pageId;
 	}
-	
+
 	/**
 	 * @param pageId
 	 *            the pageId to set
@@ -51,7 +73,7 @@ public class SearchResult {
 	public void setPageId(String pageId) {
 		this.pageId = pageId;
 	}
-	
+
 	/**
 	 * @return the content
 	 */
@@ -110,6 +132,36 @@ public class SearchResult {
 	 */
 	public void setVolume(String volume) {
 		this.volume = volume;
+	}
+
+	/**
+	 * @return the chapterId
+	 */
+	public String getChapterId() {
+		return chapterId;
+	}
+
+	/**
+	 * @param chapterId
+	 *            the chapterId to set
+	 */
+	public void setChapterId(String chapterId) {
+		this.chapterId = chapterId;
+	}
+
+	/**
+	 * @return the volumeId
+	 */
+	public String getVolumeId() {
+		return volumeId;
+	}
+
+	/**
+	 * @param volumeId
+	 *            the volumeId to set
+	 */
+	public void setVolumeId(String volumeId) {
+		this.volumeId = volumeId;
 	}
 
 }

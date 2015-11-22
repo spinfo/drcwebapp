@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Search</title>
+
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../css/search.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="page-header text-center">
+				<h1>
+					<a style="color: black;" th:href="@{volumes}">Rätoromanische
+						Chrestomathie <small>Caspar Decurtins</small>
+					</a>
+				</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="lead">
+				<div>
+					<!-- NAV-TABS -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#simple"
+							aria-controls="simple" role="tab" data-toggle="tab">Simple</a></li>
+						<li role="presentation"><a href="#extended"
+							aria-controls="extended" role="tab" data-toggle="tab">Extended</a></li>
+						<li role="presentation"><a href="#faceted"
+							aria-controls="faceted" role="tab" data-toggle="tab">Faceted</a></li>
+					</ul>
+					<!-- / NAV-TABS -->
+
+					<!-- TAB-PANES -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="simple">
+							<div th:replace="fragments/search :: searchForm"></div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="extended">Extended
+							search not implemented yet...</div>
+						<div role="tabpanel" class="tab-pane" id="faceted">Faceted
+							search not implemented yet...</div>
+					</div>
+					<!-- / TAB-PANES -->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

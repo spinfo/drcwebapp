@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
+
 <title>Search results</title>
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
 </head>
-<body>
-	<div class="container-fluid">
 
-		<div class="row-fluid">
+<!-- TODO Alternative Ergebnisanzeigen: -->
+<!-- Paginierung -->
+<!-- KWIC -->
+<!-- highlighting -->
+<!-- result snippets -->
+
+<body>
+	<div class="container">
+		<!-- HEADER -->
+		<div class="row">
 			<div class="page-header text-center">
 				<h1>
-					<a style="color: black;" th:href="@{drc/volumes}">Rätoromanische
-						Chrestomathie </a> <small>Suchergebnis für "<em
-						class="text-info" th:text="${searchPhrase}"> </em>"
-					</small>
+					<a style="color: black;" th:href="@{volumes}">Crestomazia
+						Retoromontscha <small>Caspar Decurtins</small>
+					</a>
 				</h1>
 			</div>
 		</div>
+		<!-- / HEADER -->
+		<div class="row">
+			<div class="col-lg-offset-3 lead">
+				<strong>Suchergebnis für "<em class="text-info"
+					th:text="${searchPhrase}"> </em>":
+				</strong>
+			</div>
+		</div>
 
-		<div class="row-fluid">
+		<!-- navtab -->
+
+		<div class="row">
 			<div class="col-md-3 well">
 				<legend>
-					Suchwort: <strong><em class="text-info"
-						th:text="${searchPhrase}"></em></strong> <br /> Treffer <em
-						class="text-info" th:text="${offset} + 1"></em> - <em
+					Treffer <em class="text-info" th:text="${offset} + 1"></em> - <em
 						class="text-info" th:text="${totalHits}"></em> von <em
 						class="text-info" th:text="${totalHits}"></em>
 				</legend>
@@ -36,20 +52,24 @@
 						name="search" th:value="*{searchPhrase}" autofocus="autofocus"
 						autocomplete="on" />
 				</form>
-				<a th:href="@{search}">Erweiterte Suche</a>
+				<br /> <a th:href="@{search}">Erweiterte Suche</a>
 			</div>
-
-			<!-- TODO Paginierung ... -->
-			<!-- TODO KWIC (highlighting bzw. snippets) -->
-
-			<!-- Die Ergebnisliste: -->
 			<div class="col-md-8">
+				<!-- RESULT TABLE -->
 				<table class="table table-hover">
 					<tr th:each="result : ${hits}">
-						<td><span th:text="${result.filename}"></span></td>
+						<td><span th:text="${result.volume}"></span></td>
+						<td><span th:text="${result.chapter}"></span></td>
+						<td><span th:text="${result.language}"></span></td>
+						<td><span> <a
+								th:href="@{page(pageId=${result.pageId}, chapterId=${result.chapterId}, chapterTitle=${result.chapter}, volumeId=${result.volumeId}, volumeTitle=${result.volume})}"
+								th:text="${result.filename}"></a></span></td>
+						<!-- 
 						<td><span th:utext="${result.content}"></span></td>
+ -->
 					</tr>
 				</table>
+				<!-- / RESULT TABLE -->
 			</div>
 		</div>
 	</div>
