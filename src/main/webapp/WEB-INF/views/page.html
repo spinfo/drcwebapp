@@ -2,86 +2,16 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Page</title>
-<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../css/page.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
-
-<style type="text/css">
-
-.word_info {
-	font-size: 18px;
-}
-.arrow_box {
-	position: absolute;
-	background: #88b7d5;
-	border: 1px solid #707070;
-}
-.arrow_box:after, .arrow_box:before {
-	top: 100%;
- 	left: 50%; 
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-.arrow_box:after {
-/* 	border-top-color: #42d9ff; */
-	border-top-color: #EFEFEF;	
-	border-width: 14px;
- 	margin-left: -20px; 
-}
-.arrow_box:before {
-	border-top-color: #707070;
-	border-width: 15px;
-	margin-left: -22px;
-}
-.translatable {
-	font-size: 25px;
-	line-height: 30px;
-	cursor: default;
-	color: #707070;
-}
-.translate {
-	position: absolute;
-	border: 1px solid #a2a2a2 !important;
-	right: 42px;
-	top: 65%;
-}
-.closeB {
-	top: 65%;
-	position: absolute;
-	right: 6px;
-}
-.translation {
-/* 	background: #42d9ff;  */
-	background: #EFEFEF; 
-	margin-top: -185px;
-	border: 1px solid #707070 !important;
-	height: 150px;
-    border-radius: 5px; 
- 	padding: 12px; 
-	display: none;
-	font-size: 20px;
- 	margin-left: -175px; 
-	width: 325px;
-}
-.selected {
-	color: #15E9B1;
-}
-
-.text-area {
-	margin-top: 100px;
-}
-
-</style>
 </head>
 <body>
-
 	<div class="container-fluid">
-		
-		<!-- HEADDER -->
+		<!-- HEADER -->
 		<div class="row-fluid">
 			<div class="page-header text-center">
 				<h1>
@@ -91,236 +21,58 @@
 				</h1>
 			</div>
 		</div>
-		<!-- / HEADDER -->
-		
+		<!-- / HEADER -->
+
 		<!-- BREADCRUMB -->
 		<div class="row-fluid">
 			<div class="span12 lead">
-				<a th:href="@{/}">Start</a>
-				<span> > </span>
-					<a th:href="@{volumes}">RC Bände</a>
-				<span> > </span>
-					<a th:href="@{chapters(volumeId=${volumeId}, volumeTitle=${volumeTitle})}" th:text="${volumeTitle}"></a>
-				<span> > </span>
-				<a th:href="@{pages(chapterId=${chapterId}, chapterTitle=${chapterTitle}, volumeId=${volumeId}, volumeTitle=${volumeTitle})}" th:text="${chapterTitle}"></a>
-				<span> > </span>
-				<span th:text="${page.url}"></span>
+				<a th:href="@{/}">Start</a> <span> > </span><a th:href="@{volumes}">RC
+					Bände</a> <span> > </span><a
+					th:href="@{chapters(volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
+					th:text="${volumeTitle}"></a> <span> > </span> <a
+					th:href="@{pages(chapterId=${chapterId}, chapterTitle=${chapterTitle}, volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
+					th:text="${chapterTitle}"></a> <span> > </span> <span
+					th:text="${page.url}"></span>
 			</div>
 		</div>
 		<!-- / BREADCRUMB -->
-		
 		<div class="row-fluid">
 			<div class="span12 lead">
 				<div>
-				
-				  <!-- NAV-TABS -->
-				  <ul class="nav nav-tabs" role="tablist">
-				  	<li role="presentation"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>
-				    <li role="presentation" class="active"><a href="#correct" aria-controls="correct" role="tab" data-toggle="tab">Correct</a></li>
-				    <li role="presentation"><a href="#annotate" aria-controls="annotate" role="tab" data-toggle="tab">Annotate</a></li>
-				    <li role="presentation"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
-				    <li role="presentation"><a href="#export" aria-controls="export" role="tab" data-toggle="tab">Export</a></li>
-				  </ul>
-				  <!-- / NAV-TABS -->
-				
-				  <!-- TAB-PANES -->
-				  <div class="tab-content">
-				    <div role="tabpanel" class="tab-pane" id="upload">Upload some files...</div>
-				    <div role="tabpanel" class="tab-pane active" id="correct">
-				    	<div class="container-fluid">
-				    		<div class="row-fluid">
-								<div class="span2"></div>
-								<div class="span8 lead text-justified text-area">
-									<div style="float: left;" th:each="word : ${words}">
-										<div class="translatable" th:attr="data-lang-id=${word.languageId}">
-											<div class="translation arrow_box">
-												<p>
-													<small>
-														<span class="word_info" th:utext="'ID: ' + ${word.id}">
-														</span>
-													</small>
-													<br/>
-													<small>
-														<span class="word_info" th:utext="'WORD: ' + ${word.currentVersion.version}">
-														</span>
-													</small>
-													<br/>
-													<small>
-														<span class="word_info" th:utext="'POS: ' + ${word.currentPos.posTag}">
-														</span>
-													</small>
-													<br/>
-													<small>
-														<span class="word_info" th:utext="'INDEX: ' + ${word.index}">
-														</span>
-													</small>
-													<br/>
-													<small>
-														<span class="word_info" id="word_lang">
-														</span>
-													</small>
-												</p>
-												<button type="button" class="btn btn-danger btn-sm closeB">x</button>
-												<button th:attr="data-id=${word.id}, data-word=${word.currentVersion.version}" type="button" class="btn btn-default btn-sm translate">Übersetzen</button>
-											</div>
-											<span class="word" th:text="${word.currentVersion.version}"></span><span>&nbsp;</span>
-										</div>
-									</div>
-								</div>
-								<div class="span2"></div>
-				    		</div>
-				   		</div>
-				    </div>
-				    <div role="tabpanel" class="tab-pane" id="annotate">Annotation not implemented yet...</div>
-				    <div role="tabpanel" class="tab-pane" id="search">Search ...</div>
-				    <div role="tabpanel" class="tab-pane" id="export">Export in what so ever ...</div>
+					<!-- NAV-TABS -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation"><a href="#upload"
+							aria-controls="upload" role="tab" data-toggle="tab">Upload</a></li>
+						<li role="presentation" class="active"><a href="#translate"
+							aria-controls="translate" role="tab" data-toggle="tab">Translate</a></li>
+						<li role="presentation"><a href="#annotate"
+							aria-controls="annotate" role="tab" data-toggle="tab">Annotate</a></li>
+						<li role="presentation"><a href="#search"
+							aria-controls="search" role="tab" data-toggle="tab">Search</a></li>
+						<li role="presentation"><a href="#export"
+							aria-controls="export" role="tab" data-toggle="tab">Export</a></li>
+					</ul>
+					<!-- / NAV-TABS -->
+					<!-- TAB-PANES -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane" id="upload">Upload
+							some files...</div>
+						<div role="tabpanel" class="tab-pane active" id="translate">
+							<div th:replace="fragments/translation :: translation"></div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="annotate">Annotation
+							not implemented yet...</div>
+						<div role="tabpanel" class="tab-pane" id="search">Search ...</div>
+						<div role="tabpanel" class="tab-pane" id="export">Export in
+							what so ever ...</div>
+					</div>
+					<!-- / TAB-PANES -->
 				</div>
 				<!-- / TAB-PANES -->
 			</div>
-		</div>
-		
-			<!-- .modal -->
-			<div class="modal fade" id="myModal">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 class="modal-title">Übersetzung</h4>
-						</div>
-						<div class="modal-body">
-								
-							<!-- CONTENT GOES HERE -->	
-								
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Schließen</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-			
-			
-			
+
 		</div>
 	</div>
-	
-	<script type="text/javascript">
-		//<![CDATA[
-		           
-		           
-        var locked = false;
-        var lang;
-        var phrase; 
-        
-        window.maalrCallback = function(result) {
-        	console.log(JSON.stringify(result));
-        	$('.modal-body').empty();
-        	$('.modal-title').text("Übersetzung für '" + phrase + "'");
-        	
-        	
-        	if(result.data.length == 0) {
-        		$('.modal-body').append("<p style='color:red;'>" + result.nothingFoundMessage + "</p>");
-        	}
-        	 
-        	for (var key in result.data) {
-                if (result.data.hasOwnProperty(key)) {
-                    var a = result.data[key].a;
-                    var b = result.data[key].b;
-                    $('.modal-body').append('<p>' + a + ' | ' + b + '</p>');
-                }
-            }
-        	$('#myModal').modal('toggle');
-		}
-         
-		$('.translate').click(function() {
-
-			var id = $(this).attr("data-id");
-			phrase = $(this).attr("data-word");
-			var context = 'rumantschgrischun';
-			var locale = 'rm';
-			var maalr_max = 10;
-			
-			if(lang == "Sursilvan") {
-				locale = "st"
-			} else if(lang == "Surmiran") {
-				context = "surmiran";
-				locale = "sm"
-			}
-			
-			var url = 'http://pledarigrond.ch/' + context + '/json?pageNr=1&pageSize=' + maalr_max + '&locale=' + locale + '&values[searchPhrase]=' + phrase;
-			
-			console.log(url);
-			
-			$.ajax({
-				type : 'GET',
-				url : url,
-				dataType: 'jsonp',
-		        async: false,
-		        cache: false,
-				crossDomain: true,
-				jsonpCallback: 'maalrCallback'
-			});
-		});
-		
-		
-		$('.translatable').click(function() {
-			if(!locked) {
-				
-				locked = true;
-				var lang_id = $(this).attr("data-lang-id");
-				var url = "/drc/language?languageId=" + lang_id;
-				
-				$.ajax({
-					type : 'GET',
-					url : url,
-					success : function(response) {
-						lang = response;
-					}
-				});
-					 
-				
-				$(this).find('.word').addClass("selected");
-				var wordWidth = $(this).find('.word').width() / 2;
-				var margin = 175 - wordWidth;
-				
-				$(this).find('.translation').fadeIn(100);
-				$(this).find('.translate').fadeIn(100);
-				$(this).find('.arrow-down').fadeIn(100);
-				$(this).find('.translation').css({'margin-left': '-'+margin + 'px'});
-				$(this).find('#word_lang').text('LANG: ' + lang);
-				
-				$(this).find('.closeB').click(function(event) {
-					event.stopPropagation();
-					locked = false;
-					var parent = $(this).parent().parent();
-					console.log(parent);
-		 			$(parent).find(".translation").hide(100);
-		 			$(parent).find(".translate").hide(100);
-		 			$(parent).find(".arrow-down").hide(100);
-		 			$(parent).find('.word').removeClass("selected");
-				});
-			}
-			
-		});
-
-		$('.translatable').hover(function() {
-			$(this).find('.word').css({'color':'#15E9B1'});
-		}, function() {
-			$(this).find('.word').css({'color':'#707070'});
-			$(this).find('.selected').css({'color':'#15E9B1'});
-
-		});
-		
-
-		//]]>
-	</script>
-
+	<script type="text/javascript" src="../js/page.js"></script>
 </body>
 </html>

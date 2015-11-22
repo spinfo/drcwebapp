@@ -28,5 +28,7 @@ public interface PageRepository extends Repository<Page, String> {
 	public String findOne(String pageId);
 	
 	public Page findByPageId(String pageId);
+	
+	public List<Page> findByRange(int from, int to);
 
 }
