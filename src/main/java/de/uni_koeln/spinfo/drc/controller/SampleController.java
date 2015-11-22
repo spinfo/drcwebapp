@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class CustomController {
+public class SampleController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@RequestMapping(value = "/mypage")
+	@RequestMapping(value = "/samplePage")
 	public ModelAndView mypage() {
-		logger.info("calling mypage.html");
-		return new ModelAndView("mypage");
+		logger.info("calling samplePage.html");
+		return new ModelAndView("samplePage");
 	}
 
-	@RequestMapping(value = "/mypage2")
+	@RequestMapping(value = "/samplePage2")
 	public ModelAndView mypage2() {
-		logger.info("calling mypage2.html");
-		return new ModelAndView("mypage2");
+		logger.info("calling samplePage2.html");
+		return new ModelAndView("samplePage2");
 	}
 
 }
