@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -28,12 +26,18 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import de.uni_koeln.spinfo.drc.util.PropertyReader;
 
 @Service
 public class ExtendedSearcher {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	PropertyReader propertyReader;
 
 	private final StandardAnalyzer analyzer = new StandardAnalyzer();
 
@@ -45,12 +49,11 @@ public class ExtendedSearcher {
 	@Test
 	public void testSearch() throws URISyntaxException {
 
-		String indexDir = "index";
 		String q = "daniel";
 		int offset = 0;
 
 		try {
-			search(indexDir, q, offset);
+			search(q, offset);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -65,49 +68,28 @@ public class ExtendedSearcher {
 	 * Paginierung, eine mit zusätzlichem param
 	 */
 
-	public List<SearchResult> search(String indexDir, String q, int offset)
+	public List<SearchResult> search(String q, int offset)
 			throws IOException, ParseException, InvalidTokenOffsetsException, URISyntaxException {
 
-		// TODO ergebnis besser page auf string?
-
-		// Directory dir = new SimpleFSDirectory(Paths.get(new URI(indexDir)));
+		String indexDir = propertyReader.getIndexDir();
 		Directory dir = new SimpleFSDirectory(new File(indexDir).toPath());
 		DirectoryReader dirReader = DirectoryReader.open(dir);
 		IndexSearcher is = new IndexSearcher(dirReader);
 
 		QueryParser parser = new QueryParser("contents", analyzer);
 		Query query = parser.parse(q);
-
 		TopDocs hits = is.search(query, 5000);
-
 		this.setTotalHits(hits.totalHits);
 		logger.info("QUERY: " + query + " - OFFSET: " + offset + " - HITS: " + hits.totalHits);
 
-		Map<String, String> resultMap = new HashMap<String, String>();
 		List<SearchResult> resultList = new ArrayList<SearchResult>();
 		int count = Math.min(hits.scoreDocs.length - offset, 10);
 		for (int i = 0; i < count; i++) {
 			ScoreDoc scoreDoc = hits.scoreDocs[offset + i];
 			Document doc = is.doc(scoreDoc.doc);
-			String filename = doc.get("url");
-			String content = doc.get("contents");
-			String highlighted = highlight(q, content);
-
-			// TODO für korrekten Link auf Page-Anzeige muss bereits beim
-			// Indexieren folgendes vorliegen:
-			// th:href="@{page(pageId=${result.pageId}, chapterId=${chapterId},
-			// chapterTitle=${chapterTitle}, volumeId=${volumeId},
-			// volumeTitle=${volumeTitle})}"
-
-			/*
-			 * TODO: vollständiges Ergebnisobjekt erstellen (alle Felder) - oder
-			 * kann ich gleich das Document durchreichen?
-			 */
-			SearchResult result = new SearchResult();
-			result.setContent(highlighted);
-			result.setFilename(filename);
-			result.setPageId(doc.get("pageId"));
-			resultMap.put(filename, highlighted);
+			String highlighted = highlight(q, doc.get("contents"));
+			SearchResult result = new SearchResult(doc.get("url"), doc.get("pageId"), highlighted, doc.get("language"),
+					doc.get("chapterId"), doc.get("chapter"), doc.get("volumeId"), doc.get("volume"));
 			resultList.add(result);
 		}
 		dirReader.close();
@@ -151,8 +133,9 @@ public class ExtendedSearcher {
 	 * dass die get(Field)-Methoden von thymeleaf aufgerufen werden (=
 	 * schmutziger html-code...
 	 */
-	public List<Document> basicSearch2(String indexDir, String q) throws IOException, ParseException {
+	public List<Document> search2(String q) throws IOException, ParseException {
 
+		String indexDir = propertyReader.getIndexDir();
 		Directory dir = new SimpleFSDirectory(new File(indexDir).toPath());
 		DirectoryReader dirReader = DirectoryReader.open(dir);
 		IndexSearcher is = new IndexSearcher(dirReader);
