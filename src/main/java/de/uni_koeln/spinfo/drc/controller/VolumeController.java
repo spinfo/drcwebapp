@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import de.uni_koeln.spinfo.drc.mongodb.Constans;
+import de.uni_koeln.spinfo.drc.mongodb.Constants;
 import de.uni_koeln.spinfo.drc.mongodb.DataBase;
 
 @Controller()
@@ -24,7 +24,7 @@ public class VolumeController {
 	@RequestMapping(value = "/volumes", method = RequestMethod.GET)
 	public ModelAndView getVolumes() {
 		
-		ModelAndView mv = new ModelAndView(Constans.VOLUMES);
+		ModelAndView mv = new ModelAndView(Constants.VOLUMES);
 		mv.addObject("volumes", db.getVolumeRepository().findAll());
 		
 		return mv;
