@@ -21,8 +21,12 @@ public class PropertyReader {
 
 	private ResourceLoader resourceLoader;
 	
-	private static final String INDEX = "lucene.index";
+	private static final String INDEXDIR = "lucene.index";
 
+	private static final String MAXSIZE = "lucene.index.maxSize";
+
+	private static final String MAXHITS = "lucene.search.maxHits";
+	
 	@Inject
 	public PropertyReader(ResourceLoader resourceLoader) throws IOException {
 		this.resourceLoader = resourceLoader;
@@ -42,7 +46,15 @@ public class PropertyReader {
 	}
 
 	public String getIndexDir() {
-		return properties.getProperty(INDEX);
+		return properties.getProperty(INDEXDIR);
+	}
+
+	public int getMaxIndexSize() {
+		return Integer.parseInt(properties.getProperty(MAXSIZE));
+	}
+
+	public int getMaxHits() {
+		return Integer.parseInt(properties.getProperty(MAXHITS));
 	}
 
 }

@@ -2,16 +2,18 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Page</title>
+
 <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
 <link href="../css/page.css" rel="stylesheet" type="text/css" />
+<link href="../css/search.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<div class="container-fluid">
-		<!-- HEADDER -->
-		<div class="row-fluid">
+	<div class="container">
+		<!-- HEADER -->
+		<div class="row">
 			<div class="page-header text-center">
 				<h1>
 					<a style="color: black;" th:href="@{volumes}">Crestomazia
@@ -20,10 +22,11 @@
 				</h1>
 			</div>
 		</div>
-		<!-- / HEADDER -->
+		<!-- / HEADER -->
+
 		<!-- BREADCRUMB -->
-		<div class="row-fluid">
-			<div class="span12 lead">
+		<div class="row">
+			<div class="lead">
 				<a th:href="@{/}">Start</a> <span> > </span><a th:href="@{volumes}">RC
 					Bände</a> <span> > </span><a
 					th:href="@{chapters(volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
@@ -34,8 +37,8 @@
 			</div>
 		</div>
 		<!-- / BREADCRUMB -->
-		<div class="row-fluid">
-			<div class="span12 lead">
+		<div class="row">
+			<div class="lead">
 				<div>
 					<!-- NAV-TABS -->
 					<ul class="nav nav-tabs" role="tablist">
@@ -58,9 +61,11 @@
 						<div role="tabpanel" class="tab-pane active" id="translate">
 							<div th:replace="fragments/translation :: translation"></div>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="annotate">Annotation
-							not implemented yet...</div>
-						<div role="tabpanel" class="tab-pane" id="search">Search ...</div>
+						<div role="tabpanel" class="tab-pane" id="annotate">Annotation not
+							implemented yet...</div>
+						<div role="tabpanel" class="tab-pane" id="search">
+							<div th:replace="fragments/search :: searchForm"></div>
+						</div>
 						<div role="tabpanel" class="tab-pane" id="export">Export in
 							what so ever ...</div>
 					</div>

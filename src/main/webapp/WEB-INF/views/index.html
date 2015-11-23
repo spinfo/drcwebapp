@@ -7,27 +7,11 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container">
 
-		<div class="row-fluid">
-			<div class="span12"></div>
-		</div>
-
-		<div class="row-fluid">
-			<div class="span12"></div>
-		</div>
-
-		<div class="row-fluid">
-			<div class="span12"></div>
-		</div>
-
-		<div class="row-fluid">
-			<div class="span12"></div>
-		</div>
-
-		<div class="row-fluid">
+		<div class="row">
 		
-			<div class="span3 well lead">
+			<div class="col-md-3 well lead">
 				<h4> Digital verfügbar: </h4>
 				<p><small><a th:href="@{/drc/volumes}">Rätoromanische Chrestomathie</a></small></p>
 				<h4> In Vorbereitung: </h4>
@@ -39,7 +23,7 @@
 				<p class="muted"><small>Spescha, Arnold: Grammatica sursilvana.</small></p>
 			</div>
 
-			<div class="span8 lead text-left">
+			<div class="col-md-8 lead text-left">
 				<p align="center">
 					<img src="../images/Biblioteca-Digitala-500px.jpg" />
 				</p>
@@ -55,7 +39,6 @@
 					Titeln finden Sie<a th:href="@{about}"> hier </a>.
 				</p>
 			</div>
-			<div class="span3 text-center"></div>
 		</div>
 	</div>
 </body>

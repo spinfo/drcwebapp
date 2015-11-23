@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<!-- TODO searchResult im gleichen tab: 
+	action=searchResult ersetzen durch ??? -->
+
+<body>
+	<div th:fragment="searchForm">
+		<div class="row col-lg-4 col-lg-offset-4 vertical-adjust">
+			<form class="form-search" action="/drc/searchResult">
+				<input type="text" class="input-xl search-query"
+					placeholder="Suche..." name="search" th:value="*{searchPhrase}"
+					autofocus="autofocus" autocomplete="on" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

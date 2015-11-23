@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import de.uni_koeln.spinfo.drc.mongodb.Constans;
+import de.uni_koeln.spinfo.drc.mongodb.Constants;
 import de.uni_koeln.spinfo.drc.mongodb.DataBase;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Chapter;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Volume;
@@ -30,7 +30,7 @@ public class ChapterController {
 		Volume volume = db.getVolumeRepository().findOne(volumeId);
 		List<Chapter> chapters = db.getChapterRepository().findByVolumeId(volume.getId());
 		
-		ModelAndView mv = new ModelAndView(Constans.CHAPTERS);
+		ModelAndView mv = new ModelAndView(Constants.CHAPTERS);
 		mv.addObject("chapters", chapters);
 		mv.addObject("volume", volume);
 		

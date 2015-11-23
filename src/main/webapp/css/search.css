@@ -1,0 +1,15 @@
+.input-xl {
+	width: 300px
+}
+
+form {
+	display: table;
+	margin: 0 auto;
+}
+
+.vertical-adjust {
+	min-height: 50%; /* Fallback for browsers do NOT support vh unit */
+	min-height: 50vh;
+	display: flex;
+	align-items: center;
+}

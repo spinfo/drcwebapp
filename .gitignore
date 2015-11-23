@@ -13,3 +13,5 @@ hs_err_pid*
 /drc-volumes-meta/
 /words/
 /working_units/
+/index/
+/index-tests/
