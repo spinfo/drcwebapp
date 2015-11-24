@@ -1,6 +1,6 @@
 package de.uni_koeln.spinfo.drc.mongodb;
 
-public interface Constans {
+public interface Constants {
 	
 	public static final String CHAPTERS = "chapters";
 	public static final String LANGUAGES = "languages";

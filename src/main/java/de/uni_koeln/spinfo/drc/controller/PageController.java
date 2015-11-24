@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import de.uni_koeln.spinfo.drc.mongodb.Constans;
+import de.uni_koeln.spinfo.drc.mongodb.Constants;
 import de.uni_koeln.spinfo.drc.mongodb.DataBase;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Chapter;
 import de.uni_koeln.spinfo.drc.mongodb.data.document.Page;
@@ -39,7 +39,7 @@ public class PageController {
 		
 		List<Page> pages = db.getPageRepository().findByChapterIds(Arrays.asList(new String[] { chapterId }));
 		
-		ModelAndView mv = new ModelAndView(Constans.PAGES);
+		ModelAndView mv = new ModelAndView(Constants.PAGES);
 		mv.addObject("pages", pages);
 		mv.addObject("chapterTitle", chapterTitle);
 		mv.addObject("chapterId", chapterId);
@@ -56,12 +56,12 @@ public class PageController {
 			@RequestParam("volumeId") String volumeId,
 			@RequestParam("volumeTitle") String volumeTitle) {
 		
-		List<Word> words = db.getWordRepository().findByPageId(pageId);
-		Page page = db.getPageRepository().findOne(pageId);
+		Page page = db.getPageRepository().findByPageId(pageId);
+		List<Word> words = db.getWordRepository().findByRange(page.getStart(), page.getEnd());
 		
 		Collections.sort(words);
 
-		ModelAndView mv = new ModelAndView(Constans.PAGE);
+		ModelAndView mv = new ModelAndView(Constants.PAGE);
 		mv.addObject("words", words);
 		mv.addObject("page", page);
 		mv.addObject("chapterTitle", chapterTitle);
