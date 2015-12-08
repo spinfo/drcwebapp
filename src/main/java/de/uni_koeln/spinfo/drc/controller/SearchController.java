@@ -40,7 +40,7 @@ public class SearchController {
 	 * The result view
 	 */
 	@RequestMapping(value = "/searchResult")
-	public ModelAndView simpleResult(@RequestParam("search") String searchPhrase) {
+	public ModelAndView simpleResult(@RequestParam("searchForm") String searchPhrase) {
 		logger.info("search=" + searchPhrase);
 		List<SearchResult> resultList = null;
 		try {
