@@ -9,6 +9,11 @@
 <link href="../css/search.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+<style type="text/css">
+.myClass {
+	border: 5px solid #00FF00;
+}
+</style>
 </head>
 <body>
 	<div class="container">
@@ -33,7 +38,7 @@
 					th:text="${volumeTitle}"></a> <span> > </span> <a
 					th:href="@{pages(chapterId=${chapterId}, chapterTitle=${chapterTitle}, volumeId=${volumeId}, volumeTitle=${volumeTitle})}"
 					th:text="${chapterTitle}"></a> <span> > </span> <span
-					th:text="${page.url}"></span>
+					th:text="${page.url}" id="pageUrl"></span>
 			</div>
 		</div>
 		<!-- / BREADCRUMB -->
@@ -61,13 +66,16 @@
 						<div role="tabpanel" class="tab-pane active" id="translate">
 							<div th:replace="fragments/translation :: translation"></div>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="annotate">Annotation not
-							implemented yet...</div>
+						<div role="tabpanel" class="tab-pane" id="annotate">Annotation
+							not implemented yet...</div>
 						<div role="tabpanel" class="tab-pane" id="search">
 							<div th:replace="fragments/search :: searchForm"></div>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="export">Export in
-							what so ever ...</div>
+						<div role="tabpanel" class="tab-pane" id="export">
+							Export in what so ever ...
+
+							<div id="image"></div>
+						</div>
 					</div>
 					<!-- / TAB-PANES -->
 				</div>
@@ -75,5 +83,33 @@
 		</div>
 	</div>
 	<script type="text/javascript" src="../js/page.js"></script>
+
+	<script type="text/javascript">
+		/*<![CDATA[*/
+		var imgPath = "http://hydra.spinfo.uni-koeln.de/img/"
+		var pageId = $("#pageUrl").text();
+
+		$(document).ready(
+				function() {
+					var _imgContainer = $(this).find("#image");
+					var imgFile = imgPath.concat(pageId.replace("xml", "")).concat("png");
+
+					console.log("hallo");
+					console.log($(this));
+
+					$('<img src="' +imgFile + '">').load(function() {
+						console.log($(this));
+						$(this).css({
+							"width" : "300",
+							"height" : "800"
+						}).addClass("myClass").appendTo(_imgContainer);
+					});
+				});
+
+		/*]]>*/
+	</script>
+
+
+
 </body>
 </html>
